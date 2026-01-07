@@ -1,0 +1,27 @@
+[
+  {
+    "id": "q1",
+    "question": "How do I request access to a restricted dataset and who needs to approve it?",
+    "expected_sources": ["data_access_policy_v1.md", "information_classification_policy_v1.md"]
+  },
+  {
+    "id": "q2",
+    "question": "What are the rules for using external LLM services with restricted information?",
+    "expected_sources": ["information_classification_policy_v1.md", "llm_usage_guideline_v1.md"]
+  },
+  {
+    "id": "q3",
+    "question": "When must an incident be escalated immediately and what is the escalation path?",
+    "expected_sources": ["incident_management_sop_v1.md"]
+  },
+  {
+    "id": "q4",
+    "question": "What checks are required before releasing an LLM-enabled feature?",
+    "expected_sources": ["model_release_checklist_v1.md", "llm_usage_guideline_v1.md"]
+  },
+  {
+    "id": "q5",
+    "question": "What should the assistant do if it cannot find evidence in the documents?",
+    "expected_sources": ["faq_policy_assistant_v1.md", "model_release_checklist_v1.md"]
+  }
+]
