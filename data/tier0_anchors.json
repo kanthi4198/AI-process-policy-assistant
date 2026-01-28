@@ -1,0 +1,150 @@
+[
+  {
+    "policy_id": "EXT-01",
+    "title": "EU & German Regulatory Obligations",
+    "owner": "Legal",
+    "tags": ["legal_anchor", "regulatory_compliance", "eu_law", "germany", "data_protection", "labor_law", "product_safety"],
+    "references": [
+      {
+        "title": "GDPR – General Data Protection Regulation (EU) 2016/679 (Official consolidated text on EUR-Lex)",
+        "url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj",
+        "tags": ["gdpr", "data_protection", "privacy", "personal_data", "eu_law", "regulation", "compliance"]
+      },
+      {
+        "title": "EUR-Lex – EU Law Access Portal",
+        "url": "https://eur-lex.europa.eu/",
+        "tags": ["eu_law", "legislation", "official_legal_source", "regulatory_framework"]
+      },
+      {
+        "title": "BfDI – Federal Commissioner for Data Protection and Freedom of Information (Germany)",
+        "url": "https://www.bfdi.bund.de/",
+        "tags": ["data_protection", "privacy", "germany", "supervisory_authority", "enforcement", "guidance"]
+      },
+      {
+        "title": "BMAS – German Federal Ministry of Labour and Social Affairs",
+        "url": "https://www.bmas.de/",
+        "tags": ["labor_law", "employment", "germany", "worker_rights", "social_policy", "regulatory_guidance"]
+      }
+    ],
+    "summary": "External anchor for EU and German legal obligations. Used for high-level reference and citation; it does not replace internal corporate policies or legal advice."
+  },
+  {
+    "policy_id": "EXT-02",
+    "title": "Sustainability, ESG & Audit Requirements",
+    "owner": "Compliance",
+    "tags": ["legal_anchor", "compliance", "esg", "sustainability", "audit", "reporting", "eu_law"],
+    "references": [
+      {
+        "title": "European Commission – Corporate Sustainability Reporting (CSRD)",
+        "url": "https://finance.ec.europa.eu/capital-markets-union-and-financial-markets/company-reporting-and-auditing/company-reporting/corporate-sustainability-reporting_en",
+        "tags": ["csrd", "esg", "sustainability", "reporting", "eu_law", "compliance"]
+      },
+      {
+        "title": "European Commission – Sustainable Finance",
+        "url": "https://finance.ec.europa.eu/sustainable-finance_en",
+        "tags": ["sustainable_finance", "esg", "taxonomy", "disclosure", "eu_policy", "compliance"]
+      },
+      {
+        "title": "IAASB – International Auditing and Assurance Standards Board",
+        "url": "https://www.iaasb.org/",
+        "tags": ["audit", "assurance", "standards_body", "governance", "evidence", "compliance"]
+      }
+    ],
+    "summary": "External anchor for ESG/sustainability reporting and audit/assurance expectations. Used for reference and citation; internal policies define operational processes."
+  },
+  {
+    "policy_id": "EXT-Q-01",
+    "title": "IATF 16949 (Automotive QMS)",
+    "owner": "Quality",
+    "tags": ["standard_anchor", "automotive", "quality_management", "qms", "supplier_quality", "audit_readiness"],
+    "references": [
+      {
+        "title": "IATF – Official Global Oversight (Home)",
+        "url": "https://www.iatfglobaloversight.org/",
+        "tags": ["iatf", "automotive", "standards_body", "qms", "quality_management", "official_source"]
+      },
+      {
+        "title": "IATF – IATF 16949 Standards Overview",
+        "url": "https://www.iatfglobaloversight.org/standards/iatf-16949/",
+        "tags": ["iatf_16949", "automotive_qms", "quality_management", "audit", "certification", "requirements_overview"]
+      }
+    ],
+    "summary": "External anchor for the automotive QMS reference (IATF 16949). Use as reference/citation only; do not treat as a complete reproduction of the standard."
+  },
+  {
+    "policy_id": "EXT-Q-02",
+    "title": "ISO 9001 (Quality Management)",
+    "owner": "Quality",
+    "tags": ["standard_anchor", "iso", "quality_management", "qms", "continuous_improvement", "audit"],
+    "references": [
+      {
+        "title": "ISO – ISO 9001 Quality Management Overview",
+        "url": "https://www.iso.org/iso-9001-quality-management.html",
+        "tags": ["iso_9001", "quality_management", "qms", "audit", "continuous_improvement", "overview"]
+      },
+      {
+        "title": "ISO – ISO 9001 Standard Landing Page",
+        "url": "https://www.iso.org/standard/62085.html",
+        "tags": ["iso_9001", "standard_landing", "official_source", "requirements_reference"]
+      }
+    ],
+    "summary": "External anchor for ISO 9001. Use for high-level reference/citation; internal quality policies define how requirements are implemented."
+  },
+  {
+    "policy_id": "EXT-Q-03",
+    "title": "ISO 26262 (Functional Safety)",
+    "owner": "Safety / Engineering",
+    "tags": ["standard_anchor", "iso", "functional_safety", "automotive", "risk_management", "safety_lifecycle"],
+    "references": [
+      {
+        "title": "ISO – ISO 26262 Standard Landing Page",
+        "url": "https://www.iso.org/standard/68383.html",
+        "tags": ["iso_26262", "functional_safety", "automotive", "standard_landing", "official_source"]
+      },
+      {
+        "title": "ISO – Technical Committee/Work on Road Vehicles (Context page)",
+        "url": "https://www.iso.org/committee/538356.html",
+        "tags": ["iso_committee", "road_vehicles", "functional_safety_context", "governance", "standards_development"]
+      }
+    ],
+    "summary": "External anchor for ISO 26262 functional safety. Use for reference/citation only; do not treat as full standard content."
+  },
+  {
+    "policy_id": "EXT-Q-04",
+    "title": "ISO 21434 (Automotive Cybersecurity)",
+    "owner": "Security",
+    "tags": ["standard_anchor", "iso", "automotive_cybersecurity", "security", "risk_management", "lifecycle"],
+    "references": [
+      {
+        "title": "ISO – ISO/SAE 21434 Standard Landing Page",
+        "url": "https://www.iso.org/standard/70918.html",
+        "tags": ["iso_21434", "automotive_cybersecurity", "standard_landing", "official_source", "risk_management"]
+      },
+      {
+        "title": "ISO News – Automotive Cybersecurity (Context article)",
+        "url": "https://www.iso.org/news/ref2664.html",
+        "tags": ["automotive_cybersecurity", "context", "overview", "lifecycle_security", "guidance"]
+      }
+    ],
+    "summary": "External anchor for ISO/SAE 21434 automotive cybersecurity. Use for reference/citation only; internal security policies define operational controls."
+  },
+  {
+    "policy_id": "EXT-Q-05",
+    "title": "VDA Audit Requirements (Germany)",
+    "owner": "Quality / Compliance",
+    "tags": ["standard_anchor", "vda", "germany", "automotive", "audit", "quality_management", "supplier_quality"],
+    "references": [
+      {
+        "title": "VDA – Verband der Automobilindustrie (Home)",
+        "url": "https://www.vda.de/",
+        "tags": ["vda", "automotive", "germany", "industry_body", "official_source"]
+      },
+      {
+        "title": "VDA – Topic: Quality (Overview)",
+        "url": "https://www.vda.de/en/topics/quality",
+        "tags": ["vda_quality", "audit", "quality_management", "requirements_overview", "compliance"]
+      }
+    ],
+    "summary": "External anchor for VDA audit-related expectations in Germany. Use for reference/citation; do not treat as complete standard text."
+  }
+]

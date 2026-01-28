@@ -1,0 +1,31 @@
+# ---- Python / virtual environments ----
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# ---- Environment variables / secrets ----
+.env
+.env.*
+
+# ---- OS / editor noise ----
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# ---- Data artifacts (generated, not source) ----
+data/index/
+*.log
+
+# ---- Model / cache files ----
+.cache/
+.huggingface/
+torch_cache/
+*.pt
+*.bin
+
+# ---- Temporary / experiment files ----
+tmp/
+scratch/
+notebooks/.ipynb_checkpoints/
