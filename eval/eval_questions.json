@@ -1,27 +1,86 @@
 [
   {
     "id": "q1",
-    "question": "How do I request access to a restricted dataset and who needs to approve it?",
-    "expected_sources": ["data_access_policy_v1.md", "information_classification_policy_v1.md"]
+    "question": "What are the different information classification levels and how must confidential data be handled?",
+    "expected_sources": [
+      "CORP-02_Data_Classification_and_Handling_Policy"
+    ]
   },
   {
     "id": "q2",
-    "question": "What are the rules for using external LLM services with restricted information?",
-    "expected_sources": ["information_classification_policy_v1.md", "llm_usage_guideline_v1.md"]
+    "question": "Who is allowed to access highly confidential information and what approvals or controls are required?",
+    "expected_sources": [
+      "CORP-02_Data_Classification_and_Handling_Policy",
+      "CORP-03_Information_Security_and_Access_Control_Policy"
+    ]
   },
   {
     "id": "q3",
-    "question": "When must an incident be escalated immediately and what is the escalation path?",
-    "expected_sources": ["incident_management_sop_v1.md"]
+    "question": "What are the rules for granting and reviewing user access to IT systems?",
+    "expected_sources": [
+      "CORP-03_Information_Security_and_Access_Control_Policy",
+      "IT-01_Acceptable_Use_of_IT_Systems_Policy"
+    ]
   },
   {
     "id": "q4",
-    "question": "What checks are required before releasing an LLM-enabled feature?",
-    "expected_sources": ["model_release_checklist_v1.md", "llm_usage_guideline_v1.md"]
+    "question": "When must an information security incident be reported and what is the escalation path?",
+    "expected_sources": [
+      "CORP-04_Incident_Response_and_Escalation_Policy",
+      "OPS-02_Quality_Incident_Reporting_Policy"
+    ]
   },
   {
     "id": "q5",
-    "question": "What should the assistant do if it cannot find evidence in the documents?",
-    "expected_sources": ["faq_policy_assistant_v1.md", "model_release_checklist_v1.md"]
+    "question": "How long must business and quality records be retained and when may they be deleted?",
+    "expected_sources": [
+      "CORP-05_Records_Retention_and_Deletion_Policy",
+      "AUD-01_Audit_Evidence_and_Record_Handling_Policy"
+    ]
+  },
+  {
+    "id": "q6",
+    "question": "What are employees allowed and not allowed to do with company IT equipment and internet access?",
+    "expected_sources": [
+      "IT-01_Acceptable_Use_of_IT_Systems_Policy"
+    ]
+  },
+  {
+    "id": "q7",
+    "question": "How must employee personal data be handled, and what are employees' privacy rights?",
+    "expected_sources": [
+      "HR-01_Employee_Data_and_Privacy_Policy"
+    ]
+  },
+  {
+    "id": "q8",
+    "question": "What steps must be taken to prepare for external or customer audits and maintain audit readiness?",
+    "expected_sources": [
+      "CORP-Q-02_Audit_Readiness_and_Compliance_Policy",
+      "AUD-01_Audit_Evidence_and_Record_Handling_Policy"
+    ]
+  },
+  {
+    "id": "q9",
+    "question": "How should quality or process incidents be reported and documented?",
+    "expected_sources": [
+      "OPS-02_Quality_Incident_Reporting_Policy"
+    ]
+  },
+  {
+    "id": "q10",
+    "question": "How can someone request a formal exception to an existing policy and who must approve it?",
+    "expected_sources": [
+      "PROC-01_Policy_Exception_Request_Procedure"
+    ]
+  },
+  {
+    "id": "q11",
+    "question": "Which external standards and regulations are referenced for legal and regulatory compliance in the EU and Germany?",
+    "expected_sources": [
+      "tier0_anchors.json",
+      "EXT-01",
+      "EU & German Regulatory Obligations"
+    ]
   }
 ]

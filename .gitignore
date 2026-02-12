@@ -16,6 +16,7 @@ Thumbs.db
 
 # ---- Data artifacts (generated, not source) ----
 data/index/
+vector_store/
 *.log
 
 # ---- Model / cache files ----
@@ -29,3 +30,64 @@ torch_cache/
 tmp/
 scratch/
 notebooks/.ipynb_checkpoints/
+
+# --- Hugging Face / Transformers caches ---
+**/.cache/huggingface/
+**/.cache/torch/
+**/.cache/transformers/
+**/.cache/sentence_transformers/
+HF_HOME/
+TRANSFORMERS_CACHE/
+HUGGINGFACE_HUB_CACHE/
+
+# If you explicitly set a cache dir in your project
+cache/
+caches/
+
+# --- Model files (never commit weights) ---
+**/*.bin
+**/*.safetensors
+**/*.ckpt
+**/*.pt
+**/*.pth
+**/*.onnx
+**/*.tflite
+
+# --- Local vector DB / indexes (common) ---
+# FAISS
+**/*.faiss
+**/*.index
+
+# Chroma
+chroma/
+**/chroma/
+chromadb/
+
+# LanceDB
+lancedb/
+**/lancedb/
+
+# Weaviate local volumes (if any)
+weaviate_data/
+
+# Milvus / Qdrant local storage (if any)
+qdrant_storage/
+milvus_data/
+
+# --- App secrets / env ---
+.env
+.env.*
+!.env.example
+
+# --- Logs / outputs ---
+logs/
+*.log
+outputs/
+data/processed/
+data/tmp/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
