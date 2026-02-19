@@ -11,44 +11,27 @@ This script:
   - Runs each eval question and measures retrieval quality (Hit@1, Hit@k)
 - Prints a ranked leaderboard of all configurations
 
-Usage examples:
-
-  # Run with built-in defaults (sweeps a sensible grid of sizes)
-  python src/chunk_eval.py
-
-  # Specify a custom grid of child sizes and parent sizes
-  python src/chunk_eval.py \
-    --child_sizes 600 800 1000 1200 1500 \
-    --parent_sizes 2500 3500 5000
-
-  # Use a different embedding model for the eval
-  python src/chunk_eval.py --hf_model Alibaba-NLP/gte-multilingual-base
-
-Notes:
-- The eval questions live in `eval/eval_questions.json`.
-- Parent overlap is set to ~10% of parent size; child overlap to ~12% of child size.
-- The embedding model is loaded once and reused for every configuration, so the
-  script measures purely the effect of chunking — not the embedding model.
+Usage (from project root): python -m policy_assistant.eval.chunk_eval ...
 """
 
 import argparse
 import statistics
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Sequence
 
-from langchain.docstore.document import Document
+from langchain_core.documents import Document
 
 try:
     from langchain_community.vectorstores import FAISS
 except Exception:
     from langchain.vectorstores import FAISS  # type: ignore
 
-from chunking import parent_child_chunk_documents
-from embed_eval import EvalItem, load_eval_items
-from embeddings_local import select_embeddings, default_hf_model
-from loaders import find_pdfs, load_pdfs
+from policy_assistant.data.chunking import parent_child_chunk_documents
+from policy_assistant.data.loaders import find_pdfs, load_pdfs
+from policy_assistant.embeddings.local import default_hf_model, select_embeddings
+from policy_assistant.eval.common import EvalItem, load_eval_items
 
 
 # ---------------------------------------------------------------------------
@@ -105,7 +88,7 @@ def load_raw_docs(docs_dir: Path) -> list[Document]:
 
 
 # ---------------------------------------------------------------------------
-# Retrieval evaluation (same logic as embed_eval.py)
+# Retrieval evaluation (same logic as embed_eval)
 # ---------------------------------------------------------------------------
 
 
@@ -271,16 +254,21 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--hf_model", type=str, default=None,
-        help="Hugging Face embedding model (default: same as ingest.py).",
+        help="Hugging Face embedding model (default: same as ingest).",
     )
 
     return parser.parse_args()
 
 
+def _project_root() -> Path:
+    """Project root (parent of src/), so paths work when run from any cwd."""
+    return Path(__file__).resolve().parent.parent.parent.parent
+
+
 def main() -> None:
     args = parse_args()
 
-    base = Path.cwd()
+    base = _project_root()
     docs_dir = (base / args.docs_dir).resolve()
     eval_path = (base / args.eval_questions_file).resolve()
 
@@ -376,7 +364,7 @@ def main() -> None:
     print(f"\nBest config: parent={best.config.parent_size}, child={best.config.child_size} "
           f"(Hit@1={best.hit_at_1*100:.1f}%, Hit@{args.top_k}={best.hit_at_k*100:.1f}%)")
     print(
-        f"Use in ingest.py:  python src/ingest.py "
+        f"Use in ingest:  python src/ingest.py "
         f"--parent_chunk_size {best.config.parent_size} "
         f"--parent_chunk_overlap {best.config.parent_overlap} "
         f"--child_chunk_size {best.config.child_size} "

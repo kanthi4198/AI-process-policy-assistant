@@ -1,6 +1,18 @@
 # Enterprise policy assistant
 A calm citation-first AI system to understand policies without guessing
 
+## Project structure
+
+- **`src/`** — CLI entry points and the `policy_assistant` package:
+  - **`policy_assistant/data/`** — document loaders (PDF) and parent-child chunking
+  - **`policy_assistant/embeddings/`** — local Hugging Face / Sentence-Transformers embeddings
+  - **`policy_assistant/store/`** — FAISS vector store build and load
+  - **`policy_assistant/retrieval/`** — retrieval logic and algorithm backends (flat, hnsw, ivf, lsh, hybrid)
+  - **`policy_assistant/eval/`** — evaluation scripts (embed, chunk, retrieval) and shared eval types
+- **`data/docs/`** — policy PDFs (input for ingest and evals)
+- **`eval/`** — `eval_questions.json` and optional `best_retrieval.json`
+- **`vector_store/`** — output of ingest (FAISS index + parent docstore)
+
 ## What problem am I trying to solve?
 
 In large organizations, policies are everywhere — data access rules, security guidelines, incident procedures, AI usage policies, release checklists.
@@ -156,3 +168,39 @@ Many AI failures don't come from weak models, they come from:
 * Overconfidence in fluent outputs
 
 This project is my attempt to explore what responsible, practical AI looks like when accuracy, explainability, and governance matter.
+
+## Retrieval evaluation
+
+The project includes a **retrieval evaluation pipeline** that compares multiple retrieval algorithms on your policy corpus so you can use the best one in production.
+
+### Algorithms evaluated
+
+| Algorithm | Description |
+|-----------|-------------|
+| **flat** | Exact k-NN (FAISS flat index) — baseline |
+| **hnsw** | Approximate k-NN using HNSW graph (FAISS) |
+| **ivf** | Inverted file index (FAISS IVF) |
+| **lsh** | Locality-sensitive hashing (FAISS LSH) |
+| **hybrid** | Dense (flat) + BM25 with RRF fusion |
+
+### Metrics
+
+- **Hit@1** — fraction of questions where the first retrieved doc is relevant
+- **Hit@k** — fraction where at least one relevant doc is in the top k
+- **MRR** — mean reciprocal rank of the first relevant doc
+- **Precision@k** — average over questions of (relevant docs in top-k) / k
+- **Recall@k** — average over questions of (relevant docs in top-k) / (total relevant docs in corpus for that question)
+
+### How to run
+
+From the project root (chunking defaults match ingest):
+
+```bash
+# Evaluate all algorithms (flat, hnsw, ivf, lsh, hybrid)
+python -m policy_assistant.eval.retrieval_eval --docs_dir data/docs --eval_questions_file eval/eval_questions.json
+
+# Evaluate only some algorithms and save the best for production
+python -m policy_assistant.eval.retrieval_eval --algorithms flat hnsw hybrid --top_k 5 --save_best eval/best_retrieval.json
+```
+
+The script prints a leaderboard and recommends an algorithm for production (e.g. `Recommended for production: 'hnsw'`). Use that algorithm when building your vector store so retrieval uses the same index type; the current ingest builds a flat FAISS index by default.

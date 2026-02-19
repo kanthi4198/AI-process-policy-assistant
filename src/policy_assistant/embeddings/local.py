@@ -12,14 +12,11 @@ from typing import Any
 import torch
 from langchain_core.embeddings import Embeddings
 
-
 try:
-    from langchain_huggingface import HuggingFaceEmbeddings
-except Exception:
-    try:
-        from langchain_community.embeddings import HuggingFaceEmbeddings
-    except Exception:
-        HuggingFaceEmbeddings = None
+    from langchain_huggingface.embeddings import HuggingFaceEmbeddings
+except ImportError:
+    from langchain_community.embeddings import HuggingFaceEmbeddings  # type: ignore[import-untyped]
+
 
 
 # Prefix configurations for instruction-tuned embedding models
@@ -27,8 +24,10 @@ except Exception:
 # Keys are substrings matched against the model name (case-insensitive).
 # Values are the query prefix prepended at search time.
 #
-# Models not listed here (e.g. gte-multilingual-base, granite-embedding,
+# Models not listed here (e.g. gte-multilingual-base, granite-embedding-*,
 # embeddinggemma) are non-instruct and require no prefixes.
+# Valid IBM Granite embedding IDs: granite-embedding-278m-multilingual,
+# granite-embedding-125m-english, granite-embedding-english-r2, etc.
 
 MODEL_PREFIX_REGISTRY: dict[str, str] = {
     "Qwen3-Embedding": (
@@ -104,13 +103,36 @@ class PrefixedEmbeddings(Embeddings):
 
 
 def _resolve_device() -> str:
-    """Return 'cuda' if a CUDA GPU is available, otherwise 'cpu'."""
+    """Return device string for embedding model: prefer GPU when available or when forced via env."""
+    # Allow forcing device via env (e.g. EMBEDDING_DEVICE=cuda for GPU)
+    env_device = os.environ.get("EMBEDDING_DEVICE", "").strip().lower()
+    if env_device in ("cuda", "cuda:0", "gpu"):
+        device = "cuda"
+        if not torch.cuda.is_available():
+            print(
+                "[embeddings] EMBEDDING_DEVICE=cuda but PyTorch reports no CUDA. "
+                "Install CUDA-enabled PyTorch, e.g.: pip install torch --index-url https://download.pytorch.org/whl/cu121"
+            )
+        else:
+            gpu_name = torch.cuda.get_device_name(0)
+            cuda_ver = getattr(torch.version, "cuda", None) or "N/A"
+            print(f"[embeddings] Using GPU: {gpu_name} (CUDA {cuda_ver})")
+        return device
+    if env_device in ("cpu",):
+        print("[embeddings] Using CPU (EMBEDDING_DEVICE=cpu)")
+        return "cpu"
+
+    # Auto-detect
     device = "cuda" if torch.cuda.is_available() else "cpu"
     if device == "cuda":
         gpu_name = torch.cuda.get_device_name(0)
-        print(f"[embeddings] Using GPU: {gpu_name} (CUDA {torch.version.cuda})")
+        cuda_ver = getattr(torch.version, "cuda", None) or "N/A"
+        print(f"[embeddings] Using GPU: {gpu_name} (CUDA {cuda_ver})")
     else:
-        print("[embeddings] No CUDA GPU detected; using CPU")
+        print(
+            "[embeddings] No CUDA GPU detected; using CPU. "
+            "To force GPU set EMBEDDING_DEVICE=cuda in .env (requires CUDA-enabled PyTorch)."
+        )
     return device
 
 
@@ -171,4 +193,4 @@ def select_embeddings(hf_model: str):
 
 def default_hf_model() -> str:
     """Resolve the default HF model from env or fallback value."""
-    return os.getenv("HF_MODEL_NAME_OR_PATH", "sentence-transformers/all-MiniLM-L6-v2")
+    return os.getenv("HF_MODEL_NAME_OR_PATH", "google/embeddinggemma-300m")

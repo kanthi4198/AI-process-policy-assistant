@@ -1,18 +1,24 @@
---extra-index-url https://download.pytorch.org/whl/cu128 # For GPU acceleration
-torch # PyTorch
-torchvision # PyTorch vision
-torchaudio # PyTorch audio
-pyyaml>=6.0 # YAML parser
-pypdf>=4.1.0 # PDF parser
-python-docx>=1.1.0 # DOCX parser
-rank-bm25>=0.2.1 # BM25 ranking
-numpy # Numerical computing
-langchain==0.2.16 # LangChain
-langchain-community==0.2.16 # LangChain community
-langchain-huggingface>=0.0.3 # LangChain Hugging Face
-langchain-text-splitters==0.2.4 # LangChain text splitters
-beautifulsoup4>=4.12.0 # Beautiful Soup
-sentence-transformers # Sentence Transformers
-transformers # Transformers
-faiss-cpu # FAISS
-huggingface-hub # Hugging Face Hub
+# For GPU: pip uses this index for CUDA builds of PyTorch
+--extra-index-url https://download.pytorch.org/whl/cu128
+torch
+torchvision
+torchaudio
+pyyaml>=6.0
+pypdf>=4.1.0
+python-docx>=1.1.0
+rank-bm25>=0.2.1
+numpy
+langchain-core>=0.2.0,<0.3
+langchain==0.2.16
+langchain-community==0.2.16
+langchain-huggingface>=0.0.3
+langchain-text-splitters==0.2.4
+beautifulsoup4>=4.12.0
+sentence-transformers
+transformers
+faiss-cpu
+huggingface-hub
+langsmith
+python-dotenv
+fpdf2
+huggingface-hub

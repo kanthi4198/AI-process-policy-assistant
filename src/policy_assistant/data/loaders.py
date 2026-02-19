@@ -8,13 +8,12 @@ Responsible for:
 
 from pathlib import Path
 
-from langchain.docstore.document import Document
+from langchain_core.documents import Document
 
-# Prefer community imports (newer LangChain layout); fall back if needed.
 try:
     from langchain_community.document_loaders import PyPDFLoader
 except Exception:
-    from langchain.document_loaders import PyPDFLoader
+    from langchain.document_loaders import PyPDFLoader  # type: ignore[import-not-found]
 
 
 def find_pdfs(docs_dir: Path) -> list[Path]:

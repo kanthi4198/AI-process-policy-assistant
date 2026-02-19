@@ -9,13 +9,8 @@ Responsible for:
 
 import pickle
 from pathlib import Path
-
-from langchain.docstore.document import Document
-
-try:
-    from langchain_text_splitters import RecursiveCharacterTextSplitter
-except Exception:  # pragma: no cover - fallback for older LangChain layouts
-    from langchain.text_splitter import RecursiveCharacterTextSplitter  # type: ignore
+from langchain_core.documents import Document
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 
 def make_parent_id(meta_base: dict, p_idx: int) -> str:
@@ -97,3 +92,10 @@ def save_parent_docstore(parent_docstore: dict[str, Document], out_dir: Path) ->
     with path.open("wb") as f:
         pickle.dump(parent_docstore, f)
     return path
+
+
+def load_parent_docstore(out_dir: Path) -> dict[str, Document]:
+    """Load parent docstore mapping from disk (as saved by save_parent_docstore)."""
+    path = out_dir / "parent_docstore.pkl"
+    with path.open("rb") as f:
+        return pickle.load(f)

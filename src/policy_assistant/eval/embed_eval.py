@@ -2,7 +2,7 @@
 Evaluate different embedding models on the local policy corpus by measuring
 retrieval quality for a set of evaluation questions.
 
-This script reuses the ingestion pipeline from ingest.py (same loaders and
+This script reuses the ingestion pipeline from ingest (same loaders and
 chunking) but **does not** persist a vector store. Instead, for each candidate
 embedding model it:
 
@@ -13,53 +13,36 @@ embedding model it:
   - Checks whether any of the top-k chunks come from an expected source
 - Computes simple retrieval metrics (Hit@1, Hit@k) per model
 
-Usage examples:
-
-  # Evaluate several Hugging Face / sentence-transformers style models
-  python src/embed_eval.py \
-    --hf_models \
-      sentence-transformers/all-MiniLM-L6-v2 \
-      Alibaba-NLP/gte-multilingual-base \
-      ibm-granite/granite-embedding-278m-multilingual \
-      intfloat/multilingual-e5-large-instruct
-
-Notes:
-- The eval questions live in eval/eval_questions.json.
-- Each question may specify expected_sources: a list of substrings that should
-  appear in the metadata["source"] (or related fields) of relevant chunks.
-- For your current corpus, you should update expected_sources so that they
-  match your actual PDF filenames (e.g. "CORP-02_Data_Classification").
+Usage (from project root): python -m policy_assistant.eval.embed_eval ...
 """
 
 import argparse
-import json
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Sequence
 
-from langchain.docstore.document import Document
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except Exception:
+    pass
+
+from langchain_core.documents import Document
 
 try:
     from langchain_community.vectorstores import FAISS
 except Exception:
     from langchain.vectorstores import FAISS  # type: ignore
 
-# Reuse ingestion utilities and local embedding builders
-from embeddings_local import select_embeddings
-from loaders import find_pdfs, load_pdfs
-from chunking import parent_child_chunk_documents
+from policy_assistant.data.chunking import parent_child_chunk_documents
+from policy_assistant.data.loaders import find_pdfs, load_pdfs
+from policy_assistant.embeddings.local import select_embeddings
+from policy_assistant.eval.common import EvalItem, load_eval_items
 
 
 # ---------------------------------------------------------------------------
 # Data structures
 # ---------------------------------------------------------------------------
-
-
-@dataclass
-class EvalItem:
-    id: str
-    question: str
-    expected_sources: list[str]
 
 
 @dataclass
@@ -69,28 +52,6 @@ class ModelEvalResult:
     total_questions: int
     hit_at_1: float
     hit_at_k: float
-
-
-# ---------------------------------------------------------------------------
-# Loading evaluation questions
-# ---------------------------------------------------------------------------
-
-
-def load_eval_items(path: Path) -> list[EvalItem]:
-    """Load eval questions from JSON file."""
-    with path.open("r", encoding="utf-8") as f:
-        data = json.load(f)
-
-    items: list[EvalItem] = []
-    for entry in data:
-        items.append(
-            EvalItem(
-                id=str(entry.get("id", "")),
-                question=str(entry.get("question", "")),
-                expected_sources=[s.lower() for s in entry.get("expected_sources", [])],
-            )
-        )
-    return items
 
 
 # ---------------------------------------------------------------------------
@@ -224,7 +185,7 @@ def parse_args() -> argparse.Namespace:
         help="JSON file with eval questions and expected_sources.",
     )
 
-    # Chunking settings (mirroring ingest.py defaults)
+    # Chunking settings (mirroring ingest defaults)
     parser.add_argument(
         "--parent_chunk_size",
         type=int,
@@ -269,10 +230,15 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def _project_root() -> Path:
+    """Project root (parent of src/), so paths work when run from any cwd."""
+    return Path(__file__).resolve().parent.parent.parent.parent
+
+
 def main() -> None:
     args = parse_args()
 
-    base = Path.cwd()
+    base = _project_root()
     docs_dir = (base / args.docs_dir).resolve()
     eval_path = (base / args.eval_questions_file).resolve()
 
