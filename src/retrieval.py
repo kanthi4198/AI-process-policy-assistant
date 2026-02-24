@@ -19,9 +19,20 @@ if __name__ == "__main__":
 
 try:
     from dotenv import load_dotenv
-    load_dotenv()
+    _env_dir = Path(__file__).resolve().parent.parent
+    load_dotenv(_env_dir / ".env")
 except Exception:
     pass
+
+# Setup LangSmith tracing BEFORE importing LangChain components
+api_key = os.environ.get("LANGSMITH_API_KEY") or os.environ.get("LANGCHAIN_API_KEY")
+if api_key:
+    os.environ["LANGCHAIN_TRACING_V2"] = "true"
+    if not os.environ.get("LANGCHAIN_API_KEY"):
+        os.environ["LANGCHAIN_API_KEY"] = api_key
+    # Set explicit endpoint if not already set (default: https://api.smith.langchain.com)
+    if not os.environ.get("LANGCHAIN_ENDPOINT") and not os.environ.get("LANGSMITH_ENDPOINT"):
+        os.environ["LANGCHAIN_ENDPOINT"] = "https://api.smith.langchain.com"
 
 if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
     try:
@@ -33,7 +44,6 @@ from policy_assistant.retrieval import get_context_for_llm, load_retrieval_artif
 
 DEFAULT_VECTOR_STORE_DIR = Path("vector_store")
 DEFAULT_HF_MODEL = "google/embeddinggemma-300m"
-LANGSMITH_TRACING_ENABLED = True
 
 
 def main() -> None:
@@ -47,37 +57,83 @@ def main() -> None:
     parser.add_argument("--hf_model", type=str, default=DEFAULT_HF_MODEL, help="Hugging Face embedding model (must match ingest)")
     args = parser.parse_args()
 
-    api_key = os.environ.get("LANGSMITH_API_KEY") or os.environ.get("LANGCHAIN_API_KEY")
-    project_name = os.environ.get("LANGCHAIN_PROJECT") or "policy-assistant-retrieval"
-    tracing_on = LANGSMITH_TRACING_ENABLED and bool(api_key)
-    if os.environ.get("DEBUG_LANGSMITH") == "1":
-        print(f"[DEBUG_LANGSMITH] API key present: {bool(api_key)}, project: {project_name!r}, tracing enabled: {tracing_on}")
-
-    def _run_retrieval() -> str:
-        vector_store_dir = Path(args.vector_store_dir)
+    # Use project name from env or default to policy-assistant-ingest
+    project_name = os.environ.get("LANGCHAIN_PROJECT") or os.environ.get("LANGSMITH_PROJECT") or "policy-assistant-ingest"
+    
+    vector_store_dir = Path(args.vector_store_dir)
+    
+    if api_key:
+        if os.environ.get("DEBUG_LANGSMITH") == "1":
+            endpoint = os.environ.get("LANGCHAIN_ENDPOINT") or os.environ.get("LANGSMITH_ENDPOINT") or "https://api.smith.langchain.com"
+            print(f"[DEBUG] Tracing enabled - API key: {bool(api_key)}, Project: {project_name}, Endpoint: {endpoint}")
+        
+        try:
+            import langsmith as ls
+            from langchain_core.tracers import LangChainTracer
+            from langchain_core.callbacks import CallbackManager
+            
+            # Verify API key and test connection
+            if os.environ.get("DEBUG_LANGSMITH") == "1":
+                try:
+                    test_client = ls.Client(api_key=api_key)
+                    print(f"[DEBUG] LangSmith client created successfully")
+                except Exception as e:
+                    print(f"[DEBUG] LangSmith client creation failed: {e}")
+            
+            # Create explicit LangChain tracer
+            tracer = LangChainTracer(project_name=project_name)
+            callback_manager = CallbackManager([tracer])
+            
+            # Load artifacts and run retrieval inside tracing context
+            with ls.tracing_context(project_name=project_name, enabled=True):
+                vector_store, parent_docstore, _ = load_retrieval_artifacts(vector_store_dir, args.hf_model)
+                
+                # Test if vector store is LangChain FAISS (supports callbacks) or custom
+                if os.environ.get("DEBUG_LANGSMITH") == "1":
+                    vs_type = type(vector_store).__name__
+                    print(f"[DEBUG] Vector store type: {vs_type}")
+                    if hasattr(vector_store, 'similarity_search'):
+                        import inspect
+                        sig = inspect.signature(vector_store.similarity_search)
+                        supports_callbacks = 'callbacks' in sig.parameters
+                        print(f"[DEBUG] Vector store supports callbacks: {supports_callbacks}")
+                
+                context = get_context_for_llm(
+                    args.query,
+                    vector_store,
+                    parent_docstore,
+                    k=args.k,
+                    use_parent_content=not args.no_parent_expand,
+                    callbacks=callback_manager,
+                    project_name=project_name,
+                )
+                
+                if os.environ.get("DEBUG_LANGSMITH") == "1":
+                    print(f"[DEBUG] Retrieval completed, checking tracer...")
+                    print(f"[DEBUG] Tracer runs: {len(getattr(tracer, '_runs', []))}")
+        except Exception as e:
+            if os.environ.get("DEBUG_LANGSMITH") == "1":
+                print(f"[DEBUG] Tracing error: {e}")
+                import traceback
+                traceback.print_exc()
+            # Fallback to non-traced execution
+            vector_store, parent_docstore, _ = load_retrieval_artifacts(vector_store_dir, args.hf_model)
+            context = get_context_for_llm(
+                args.query,
+                vector_store,
+                parent_docstore,
+                k=args.k,
+                use_parent_content=not args.no_parent_expand,
+            )
+    else:
         vector_store, parent_docstore, _ = load_retrieval_artifacts(vector_store_dir, args.hf_model)
-        return get_context_for_llm(
+        context = get_context_for_llm(
             args.query,
             vector_store,
             parent_docstore,
             k=args.k,
             use_parent_content=not args.no_parent_expand,
         )
-
-    if tracing_on:
-        try:
-            import langsmith
-            from langsmith.run_helpers import tracing_context
-            client = langsmith.Client(api_key=api_key)
-            with tracing_context(client=client, project_name=project_name, enabled=True):
-                context = _run_retrieval()
-            client.flush()
-        except Exception as e:
-            if os.environ.get("DEBUG_LANGSMITH") == "1":
-                print(f"[DEBUG_LANGSMITH] Tracing failed: {e}")
-            context = _run_retrieval()
-    else:
-        context = _run_retrieval()
 
     print(context)
 

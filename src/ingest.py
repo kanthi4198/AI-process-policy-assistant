@@ -26,9 +26,20 @@ if __name__ == "__main__":
 
 try:
     from dotenv import load_dotenv
-    load_dotenv()
+    _env_dir = Path(__file__).resolve().parent.parent
+    load_dotenv(_env_dir / ".env")
 except Exception:
     pass
+
+# Setup LangSmith tracing BEFORE importing LangChain components
+api_key = os.environ.get("LANGSMITH_API_KEY") or os.environ.get("LANGCHAIN_API_KEY")
+if api_key:
+    os.environ["LANGCHAIN_TRACING_V2"] = "true"
+    if not os.environ.get("LANGCHAIN_API_KEY"):
+        os.environ["LANGCHAIN_API_KEY"] = api_key
+    # Set explicit endpoint if not already set (default: https://api.smith.langchain.com)
+    if not os.environ.get("LANGCHAIN_ENDPOINT") and not os.environ.get("LANGSMITH_ENDPOINT"):
+        os.environ["LANGCHAIN_ENDPOINT"] = "https://api.smith.langchain.com"
 
 from policy_assistant.data import (
     find_pdfs,
@@ -38,8 +49,6 @@ from policy_assistant.data import (
 )
 from policy_assistant.embeddings import select_embeddings
 from policy_assistant.store import build_vector_store
-
-LANGSMITH_TRACING_ENABLED = True
 
 
 def main() -> None:
@@ -82,13 +91,53 @@ def main() -> None:
         print("No documents found to ingest. Exiting.")
         return
 
-    api_key = os.environ.get("LANGSMITH_API_KEY") or os.environ.get("LANGCHAIN_API_KEY")
-    project_name = os.environ.get("LANGCHAIN_PROJECT") or "policy-assistant-ingest"
-    tracing_on = LANGSMITH_TRACING_ENABLED and bool(api_key)
-    if os.environ.get("DEBUG_LANGSMITH") == "1":
-        print(f"[DEBUG_LANGSMITH] API key present: {bool(api_key)}, project: {project_name!r}, tracing enabled: {tracing_on}")
-
-    def _run_ingest() -> None:
+    project_name = os.environ.get("LANGCHAIN_PROJECT") or os.environ.get("LANGSMITH_PROJECT") or "policy-assistant-ingest"
+    
+    if api_key:
+        if os.environ.get("DEBUG_LANGSMITH") == "1":
+            endpoint = os.environ.get("LANGCHAIN_ENDPOINT") or os.environ.get("LANGSMITH_ENDPOINT") or "https://api.smith.langchain.com"
+            print(f"[DEBUG] Tracing enabled - API key: {bool(api_key)}, Project: {project_name}, Endpoint: {endpoint}")
+        
+        try:
+            import langsmith as ls
+            with ls.tracing_context(project_name=project_name, enabled=True):
+                print("Creating parent + child chunks...")
+                child_chunks, parent_docstore = parent_child_chunk_documents(
+                    all_docs,
+                    parent_size=args.parent_chunk_size,
+                    parent_overlap=args.parent_chunk_overlap,
+                    child_size=args.child_chunk_size,
+                    child_overlap=args.child_chunk_overlap,
+                )
+                print(f"Created {len(child_chunks)} child chunk(s)")
+                print(f"Created {len(parent_docstore)} parent chunk(s)")
+                parent_path = save_parent_docstore(parent_docstore, out_dir)
+                print(f"Saved parent docstore to: {parent_path}")
+                print(f"Using Hugging Face embeddings model: {args.hf_model}")
+                embeddings = select_embeddings(hf_model=args.hf_model)
+                print(f"Building FAISS vector store (algorithm={args.algorithm}; local embeddings)...")
+                build_vector_store(child_chunks, out_dir, embeddings, algorithm=args.algorithm)
+        except Exception as e:
+            if os.environ.get("DEBUG_LANGSMITH") == "1":
+                print(f"[DEBUG] Tracing error: {e}")
+            # Fallback to non-traced execution
+            print("Creating parent + child chunks...")
+            child_chunks, parent_docstore = parent_child_chunk_documents(
+                all_docs,
+                parent_size=args.parent_chunk_size,
+                parent_overlap=args.parent_chunk_overlap,
+                child_size=args.child_chunk_size,
+                child_overlap=args.child_chunk_overlap,
+            )
+            print(f"Created {len(child_chunks)} child chunk(s)")
+            print(f"Created {len(parent_docstore)} parent chunk(s)")
+            parent_path = save_parent_docstore(parent_docstore, out_dir)
+            print(f"Saved parent docstore to: {parent_path}")
+            print(f"Using Hugging Face embeddings model: {args.hf_model}")
+            embeddings = select_embeddings(hf_model=args.hf_model)
+            print(f"Building FAISS vector store (algorithm={args.algorithm}; local embeddings)...")
+            build_vector_store(child_chunks, out_dir, embeddings, algorithm=args.algorithm)
+    else:
         print("Creating parent + child chunks...")
         child_chunks, parent_docstore = parent_child_chunk_documents(
             all_docs,
@@ -105,21 +154,6 @@ def main() -> None:
         embeddings = select_embeddings(hf_model=args.hf_model)
         print(f"Building FAISS vector store (algorithm={args.algorithm}; local embeddings)...")
         build_vector_store(child_chunks, out_dir, embeddings, algorithm=args.algorithm)
-
-    if tracing_on:
-        try:
-            import langsmith
-            from langsmith.run_helpers import tracing_context
-            client = langsmith.Client(api_key=api_key)
-            with tracing_context(client=client, project_name=project_name, enabled=True):
-                _run_ingest()
-            client.flush()
-        except Exception as e:
-            if os.environ.get("DEBUG_LANGSMITH") == "1":
-                print(f"[DEBUG_LANGSMITH] Tracing failed: {e}")
-            _run_ingest()
-    else:
-        _run_ingest()
 
 
 if __name__ == "__main__":

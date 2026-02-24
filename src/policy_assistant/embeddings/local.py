@@ -15,7 +15,7 @@ from langchain_core.embeddings import Embeddings
 try:
     from langchain_huggingface.embeddings import HuggingFaceEmbeddings
 except ImportError:
-    from langchain_community.embeddings import HuggingFaceEmbeddings  # type: ignore[import-untyped]
+    from langchain_community.embeddings import HuggingFaceEmbeddings
 
 
 
