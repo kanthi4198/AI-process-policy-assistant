@@ -17,12 +17,14 @@ class EvalItem:
 
 
 def load_eval_items(path: Path) -> list[EvalItem]:
-    """Load eval questions from JSON file."""
+    """Load eval questions from JSON file. Supports a top-level list or a versioned object with an \"items\" array."""
     with path.open("r", encoding="utf-8") as f:
         data = json.load(f)
 
+    if isinstance(data, dict) and "items" in data:
+        data = data["items"]
     if not isinstance(data, list):
-        raise ValueError("eval JSON must be a list of {id, question, expected_sources}")
+        raise ValueError("eval JSON must be a list of {id, question, expected_sources} or an object with \"items\" array")
 
     items: list[EvalItem] = []
     for i, entry in enumerate(data):
