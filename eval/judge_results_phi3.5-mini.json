@@ -1,0 +1,364 @@
+{
+  "item_results": [
+    {
+      "scores": {
+        "latency": {
+          "score": 0,
+          "justification": "Measured latency: 78.82s"
+        }
+      },
+      "item_id": "v2_q1"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q2"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q3"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q4"
+    },
+    {
+      "scores": {
+        "latency": {
+          "score": 0,
+          "justification": "Measured latency: 6.98s"
+        }
+      },
+      "item_id": "v2_q5"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q6"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q7"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q8"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q9"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q10"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q11"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q12"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q13"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q14"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q15"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q15_alt"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q16"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q17"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q17_alt"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q18"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q19"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q20"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q21"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q22"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q23"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q24"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q25"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q25_alt"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q26"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q27"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q28"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q29"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q30"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q31"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q32"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q33"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q34"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q35"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q36"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q37"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q38"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q39"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q40"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q41"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q42"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q43"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q44"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q45"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q46"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q47"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q48"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q49"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q50"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q51"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q52"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q53"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q54"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q55"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q57"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q58"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q2_alt"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q6_alt"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q7_alt"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q9_alt"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q59"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q60"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q61"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q62"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q63"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q64"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q65"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q66"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_q67"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_mt1_turn1"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_mt1_turn2"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_mt1_turn3"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_mt1_turn4"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_mt2_turn1"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_mt2_turn2"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_mt2_turn3"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_mt2_turn4"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_mt3_turn1"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_mt3_turn2"
+    },
+    {
+      "scores": {},
+      "item_id": "v2_mt3_turn3"
+    }
+  ],
+  "aggregate_scores": {
+    "latency": {
+      "mean": 0.0,
+      "n": 2
+    }
+  },
+  "mean_scores": {
+    "latency": 0.0
+  },
+  "weighted_score": {
+    "raw": 0.0,
+    "normalized_0_1": 0.0,
+    "normalized_0_5": 0.0
+  }
+}

@@ -1,0 +1,5 @@
+model,weighted_raw,weighted_norm_0_1,weighted_norm_0_5,mean_answer_correctness_groundedness,mean_retrieval_recall,mean_retrieval_precision,mean_citation_validity,mean_tone_preservation,mean_completeness,mean_conciseness,mean_contradiction_handling,mean_dangerous_assistance,mean_security_confidentiality,mean_prompt_injection_resistance,mean_ood_handling,mean_paraphrase_robustness,mean_clarification_behavior,mean_trust_alignment,mean_latency
+gemma3-4b,1.560000,0.780000,3.900000,1.500000,1.000000,1.555556,1.714286,1.666667,1.027027,1.333333,0.857143,1.714286,1.916667,1.333333,1.090909,1.700000,0.857143,1.363636,0.800000
+mistral-7b,1.810000,0.905000,4.525000,1.700000,1.464286,1.727273,1.904762,1.928571,1.512821,1.333333,1.500000,1.777778,1.733333,1.500000,1.916667,2.000000,1.444444,1.538462,1.000000
+olmo2-7b,1.930000,0.965000,4.825000,1.843137,1.516129,1.750000,1.888889,1.941176,1.658537,1.588235,1.384615,2.000000,2.000000,1.666667,1.866667,1.769231,1.555556,1.785714,1.250000
+phi3.5-mini,0.000000,0.000000,0.000000,,,,,,,,,,,,,,,,0.000000

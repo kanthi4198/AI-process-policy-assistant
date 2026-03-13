@@ -58,20 +58,20 @@ def main() -> None:
     )
     parser.add_argument("--docs_dir", type=str, default="data/docs", help="Directory containing documents (recursively)")
     parser.add_argument("--out_dir", type=str, default="vector_store", help="Output directory for vector store")
-    parser.add_argument("--parent_chunk_size", type=int, default=2500, help="Parent chunk size (characters)")
-    parser.add_argument("--parent_chunk_overlap", type=int, default=250, help="Parent overlap (characters)")
+    parser.add_argument("--parent_chunk_size", type=int, default=3500, help="Parent chunk size (characters)")
+    parser.add_argument("--parent_chunk_overlap", type=int, default=350, help="Parent overlap (characters)")
     parser.add_argument("--child_chunk_size", type=int, default=1500, help="Child chunk size (characters)")
     parser.add_argument("--child_chunk_overlap", type=int, default=180, help="Child overlap (characters)")
     parser.add_argument(
         "--hf_model",
         type=str,
-        default="google/embeddinggemma-300m",
+        default="ibm-granite/granite-embedding-278m-multilingual",
         help="Hugging Face / Sentence-Transformers model name (cached) or local path",
     )
     parser.add_argument(
         "--algorithm",
         type=str,
-        default="flat",
+        default="hnsw",
         choices=["flat", "hnsw"],
         help="Vector index algorithm: flat (exact k-NN) or hnsw (approximate; use same as retrieval_eval best)",
     )

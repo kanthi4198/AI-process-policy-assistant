@@ -20,5 +20,8 @@ faiss-cpu
 huggingface-hub
 langsmith
 python-dotenv
+google-generativeai>=0.8.0
 fpdf2
-huggingface-hub
+groq
+ollama
+streamlit
