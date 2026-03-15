@@ -388,18 +388,6 @@ with st.sidebar:
                 unsafe_allow_html=True,
             )
 
-    st.markdown(
-        """
-        <div class="sidebar-user">
-            <div class="user-avatar">JS</div>
-            <div>
-                <div class="user-name">Julian Schmidt</div>
-                <div class="user-role">Policy Analyst</div>
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  MAIN AREA
